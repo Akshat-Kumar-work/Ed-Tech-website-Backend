@@ -177,7 +177,7 @@ if(passwordVerfication){
     const payload = {
         email : User.email,
         id: User.id,
-        role:User.role
+        accountType:User.accountType
     }
  const token = jwt.sign(payload , process.env.JWT_SECRET,{
         expiresIn:"2h" });
@@ -214,7 +214,7 @@ catch(err){
 
 //to change password
 
-exports.changePassword = async(req ,res)=>{
+
 
     //fetch data
      
@@ -227,4 +227,3 @@ exports.changePassword = async(req ,res)=>{
     //send mail -> password updated
 
     
-}
