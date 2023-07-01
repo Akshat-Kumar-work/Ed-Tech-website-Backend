@@ -150,6 +150,7 @@ exports.signUp = async (req ,res)=>{
 try{
 //fetch email and password
 const {email , password } = req.body;
+//validation
 if(!email || !password){
     return res.status(403).json({
         success:false,
@@ -170,12 +171,14 @@ if(!User){
 //if user exist 
 //matching hash password
 const passwordVerfication = await bcrypt.compare( password , user.password);
-const payload = {
-    email : User.email,
-    id: User.id,
-    role:User.role
-}
+
+//if password matched
 if(passwordVerfication){
+    const payload = {
+        email : User.email,
+        id: User.id,
+        role:User.role
+    }
  const token = jwt.sign(payload , process.env.JWT_SECRET,{
         expiresIn:"2h" });
 
@@ -191,6 +194,7 @@ res.cookie("token",token ,
     message:"logged in successfully"
 })
 }
+//if password not matched
 else{
     return res.status(401).json({
         success:false,
@@ -209,3 +213,18 @@ catch(err){
 
 
 //to change password
+
+exports.changePassword = async(req ,res)=>{
+
+    //fetch data
+     
+    //get old password , new password , confirm new password
+        
+    //validation
+
+    //updatee password in data base
+
+    //send mail -> password updated
+
+    
+}
