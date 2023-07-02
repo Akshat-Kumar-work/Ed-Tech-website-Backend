@@ -16,6 +16,7 @@
             })
         }
         //generating token by randomUUID which generate randome unique user identifiers
+        //here token is not that jwt token it is any string value we are refering unique user id as token
         const token = crypto.randomUUID();
         //update user by adding token and expiration time
         const updatedDetails = await User.findOneAndUpdate({email} , {token:token , resetPasswordExpires : Date.now()+5*60*1000},{new:true} )
