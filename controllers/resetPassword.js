@@ -7,18 +7,22 @@
      
         //get email from request body
         const email = req.body.email;
-        //check user for this email
+        //check user for this email exist or not
         const user = await User.findOne({email});
+        //if user not exist
         if(!user){
             return res.json({
                 success:false,
                 message:"your email is not registered"
             })
         }
+        //if user exist
+        //ek random id generate kar rhe hai jisko token bol rhe hai aur usko user k db m daal rhe hai 
+        //aur usko link k sath bhjengy as a parameter jis se hmesha different link jaega user ko 
         //generating token by randomUUID which generate randome unique user identifiers
         //here token is not that jwt token it is any string value we are refering unique user id as token
         const token = crypto.randomUUID();
-        //update user by adding token and expiration time
+        //update user db by adding token and expiration time
         const updatedDetails = await User.findOneAndUpdate({email} , {token:token , resetPasswordExpires : Date.now()+5*60*1000},{new:true} )
       
         //generate link for frontend , using 3000 because frontend is on port number 3000
@@ -46,7 +50,7 @@ return res.status(500).json({
  exports.resetPassword = async (req , res )=>{
 
     try{
-        //fetch data
+    //fetch data
     const {password , confirmPassword , token} = req.body;
     //validation
     if(password !== confirmPassword){

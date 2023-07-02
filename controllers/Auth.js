@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-//to send otp for sign up 
+//to send otp for sign up , handler
  exports.sendOTP = async(req,res)=>{
     try{
 
@@ -47,7 +47,7 @@ require("dotenv").config();
 
     const otpPayload = {email , otp};
 
-    //create entry in db
+    //create entry in db for otp
     const  otpbody = await OTP.create(otpPayload)
     console.log("otp body", otpbody);
 
@@ -82,7 +82,7 @@ exports.signUp = async (req ,res)=>{
                 message:"all field are required"
             })
         }
-        //password and confirm password ko match krdo
+        //password and confirm password ko match check karo match kar rhe hai ya nai
         if(password !== confirmPassword){
             return res.status(400).json({
                 success:false,
@@ -90,20 +90,23 @@ exports.signUp = async (req ,res)=>{
             });
         }
         
+        //if password and confirm password matched
         //check user already exist or not
         const exist = await user.findOne({email});
-
+        //if user is exist already return false
         if(exist){
             return res.status(400).json({
                 success:false,
-                message:"user already registered with the email",
+                message:"user already registered with this email",
             })
         }
+
         //find most recent otp for the user
         const recentOtp = await OTP.find({email}).sort({createdAt:-1}).limit(1);
         console.log(recentOtp);
 
         //validate otp
+        //if recent otp length is zero
         if(recentOtp.length == 0 ){
             //otp not found
             return res.status(400).json({
@@ -111,6 +114,7 @@ exports.signUp = async (req ,res)=>{
                 message:"otp not found",
             })
         }
+        //if sended otp is not matched with recent data base otp
         else if(otp !== recentOtp.otp){
             //invalid otp
             return res.status(400).json({
