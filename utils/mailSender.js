@@ -1,7 +1,9 @@
 const nodemailer = require("nodemailer");
 
+//this function used to send mail
 const mailSender = async(email , title,body)=>{
     try{
+        //creating transporter
         let transporter = nodemailer.createTransport({
             host: process.env.MAIL_HOST,
             auth:{
@@ -10,6 +12,7 @@ const mailSender = async(email , title,body)=>{
             }
         })
 
+        //using transporter to send mail
         let info = await transporter.sendMail({
             from: "ED-TECH BY AKSHAT",
             to: email,

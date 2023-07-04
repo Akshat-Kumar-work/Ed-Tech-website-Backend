@@ -37,7 +37,7 @@ const Course = require("../models/course");
     }
 }
 
-
+//course update handler
 exports.updateSection = async(req ,res)=>{
     try{
         const {sectionName , sectionId} = req.body;

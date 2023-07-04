@@ -25,6 +25,7 @@
         //update user db by adding token and expiration time
         const updatedDetails = await User.findOneAndUpdate({email} , {token:token , resetPasswordExpires : Date.now()+5*60*1000},{new:true} )
       
+        //creating url 
         //generate link for frontend , using 3000 because frontend is on port number 3000
         const url = `http://localhost:3000/update-password/${token}`
     
@@ -69,7 +70,7 @@ return res.status(500).json({
             message:"token is invalid"
         })
     }
-    //agar userpassword ka time aaj k time sy jyda hai toh mtlb token expire hogya hai
+    //agar userpassword ka time current k time sy peeche hai toh mtlb token expire hogya hai
     if(userdetails.resetPasswordExpires < Date.now()){
         return res.json({
             success:false,
@@ -81,7 +82,7 @@ return res.status(500).json({
     const hashedpassword =  bcrypt.hash(password , 10);
 
     //update password
-    await User.findOneAndUpdate( {token} , {password:hashedpasswordpassword} , {new:true})
+    await User.findOneAndUpdate( {token} , {password:hashedpassword} , {new:true})
 
     //return response
     return res.status(200).json({

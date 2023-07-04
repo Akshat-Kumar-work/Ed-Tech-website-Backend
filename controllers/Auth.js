@@ -162,7 +162,7 @@ if(!email || !password){
     })
 }
 
-//check User exist or not
+//check user exist or not
 const User = await user.findOne({email});
 
 if(!User){
