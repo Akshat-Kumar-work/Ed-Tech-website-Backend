@@ -68,7 +68,7 @@ require("dotenv").config();
 
 
 
-//to sign up
+//to sign up for new user
 exports.signUp = async (req ,res)=>{
     try{
 

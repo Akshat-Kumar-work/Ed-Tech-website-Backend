@@ -48,12 +48,12 @@ exports.createSubSection = async(req ,res)=>{
 
 //update subsection handler
 
-const updateSubSection = async (req ,res)=>{
+exports.updateSubSection = async (req ,res)=>{
 
     try{
         //fetch data
     const {sectionId , subSectionId,  title , timeDuration , description } = req.body
-    //validations
+    //fetch files
     const video = req.files.file
     //upload video
     const newupload = await ImageUploaderToCloudinary(video , process.env.FOLDER_NAME);
