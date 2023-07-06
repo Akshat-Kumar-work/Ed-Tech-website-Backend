@@ -13,7 +13,11 @@ const ratingandreviewSchema = new mongoose.Schema({
     review:{
         type:String,
         trim:true
-    }
+    },
+    contactNumber: {
+		type: Number,
+		trim: true,
+	},
 });
 
 module.exports = mongoose.model("RatingAndReview",ratingandreviewSchema)

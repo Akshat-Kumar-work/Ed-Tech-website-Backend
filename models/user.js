@@ -52,7 +52,16 @@ const userSchema = new mongoose.Schema({
     },
     resetPasswordExpires:{
         type : Date
-    }
-});
+    },
+    active: {
+        type: Boolean,
+        default: true,
+    },
+    approved: {
+        type: Boolean,
+        default: true,
+    },
+    // Add timestamps for when the document is created and last modified
+} ,    {timestamps:true}    );
 
 module.exports = mongoose.model("User",userSchema);
