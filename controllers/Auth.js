@@ -217,7 +217,14 @@ catch(err){
 
 
 //to change password
+exports.changePassword = async(req,res)=>{
+    try{
+        
+    }
+    catch(err){
 
+    }
+}
 
 
     //fetch data
