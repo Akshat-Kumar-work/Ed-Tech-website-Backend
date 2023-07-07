@@ -126,7 +126,7 @@ exports.signUp = async (req ,res)=>{
         //hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create the user
+        
         //agar approved instructor hai toh approved ko false krdo aur agar instructor nahi hai toh usko true krdo
 		let approved = "";
 		approved === "Instructor" ? (approved = false) : (approved = true);

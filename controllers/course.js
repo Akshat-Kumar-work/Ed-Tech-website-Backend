@@ -99,6 +99,9 @@ exports.createCourse = async (req ,res) =>{
         })
     }
 }
+
+
+
 //get all courses handler
 exports.getAllCourses = async (req,res)=>{
     try{
@@ -120,4 +123,52 @@ exports.getAllCourses = async (req,res)=>{
             
         })
     }
+}
+
+
+//get all details of course 
+exports.getCourseDetails = async(req ,res)=>{
+
+try{
+    const {courseId} = req.body.id;
+
+    if(!courseId){
+        return res.status(400).json({
+            success:false,
+            message:"course not found"
+        })
+    }
+
+    const courseDetails = Course.findById({_id: courseId })
+                                                //populate karo instructor ko aur uske andar jo additional details usko bhi 
+                                                .populate({ path:"instructor",populate:{path:"additionalDetails"} })
+                                                //category bhi populate krdo
+                                                .populate( "category")
+                                                //rating and reviews ko bhi populate kro
+                                                .populate("ratingAndReviews")
+                                                //course content ko populate kro aur uske andar jo subsection hai usko bhi populate kro
+                                                .populate( { path:"courseContent",populate:{path:"subSection"}})
+                                                .exec()
+
+    if(!courseDetails){
+        return res.status(400).json({
+            success:false,
+            message:`couldn't find the course with this ${courseId} id `
+        })
+    }
+
+    return res.status(200).json({
+        success:true,
+        message:"course details fetched succesfully",
+        courseDetails
+    })
+}
+catch(err){
+    console.log(err)
+    return res.status(500).json({
+        success:false,
+        message:"unable to fetch course details",
+        
+    })
+}
 }
