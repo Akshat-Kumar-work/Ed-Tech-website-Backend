@@ -46,19 +46,19 @@ router.post("/createCourse",auth ,isInstructor ,createCourse);
 router.post("/addSection",auth , isInstructor , createSection);
 
 //update section
-router.post("/updateSection",auth , isInstructor, updateSection);
+router.put("/updateSection",auth , isInstructor, updateSection);
 
 //delete section
-router.post("/deleteSection",auth ,isInstructor,deleteSection);
+router.delete("/deleteSection",auth ,isInstructor,deleteSection);
 
 //create subsection
 router.post("/addSubsection",auth , isInstructor , createSubSection);
 
 //update subsection
-router.post("/updateSubsection",auth , isInstructor , updateSubSection);
+router.put("/updateSubsection",auth , isInstructor , updateSubSection);
 
 //delete subsection
-router.post("/deleteSubsection",auth , isInstructor , deletesubSection);
+router.delete("/deleteSubsection",auth , isInstructor , deletesubSection);
 
 //get all  course
 router.get("/getAllCourses",getAllCourses);
