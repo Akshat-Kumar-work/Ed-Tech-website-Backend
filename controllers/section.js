@@ -14,13 +14,15 @@ const Course = require("../models/course");
       
         //create section
         const newSection = await Section.create({sectionName});
+
         //update in course schema also 
+        //course k schema m jo course content hai usme newSection ki id dalo aur, subsection ko populate kro courseContent k andar
         const updatedCourse = await Course.findByIdAndUpdate(
                                             courseId, {
                                                 $push:{courseContent:newSection._id}
                                             },
-                                            {new:true}
-                                            ).populate("courseContent")
+                                            {new:true})
+                                            .populate( {path: "courseContent", populate: {path: "subSection"}} ).exec()
         //return response
         return res.status(200).json({
             success:"true",

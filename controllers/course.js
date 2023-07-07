@@ -2,25 +2,26 @@ const Course = require("../models/course");
 const Tag = require("../models/tag");
 const User = require("../models/user");
 const {ImageUploaderToCloudinary} = require("../utils/imageUploader");
+const Category = require("../models/category")
 require("dotenv").config();
 
 //create course handler
 exports.createCourse = async (req ,res) =>{
     try{
         //fetch info
-        const {courseName , courseDescription , whatYouWillLearn , price , tag} = req.body
+        const {courseName , courseDescription , whatYouWillLearn , price , tag , category , status ,instructions} = req.body
 
         //get thumbnail
         const thumbnail = req.files.thumbnailImage;
 
         //validation
-        if(!courseName || !courseDescription || !whatYouWillLearn || !price || !tag || !thumbnail){
+        if(!courseName || !courseDescription || !whatYouWillLearn || !price || !tag || !thumbnail || !category){
             return res.status(401).json({
                 success:false,
             message:"all fields are required"})
             }
 
-            //check for instructor
+           	// Check if the user is an instructor
             const userId = req.user.id;
             const instructorDetails = await User.findById(userId);
             console.log("instructor details",instructorDetails)
@@ -32,13 +33,20 @@ exports.createCourse = async (req ,res) =>{
                 })
             }
 
-            //check given tag is valid or not
-            const tagDetails = await Tag.findById(tag);
 
-            if(!tagDetails){
+            //what is this mean
+            if (!status || status === undefined) {
+                status = "Draft";
+            }
+
+
+            //check given category is valid or not
+            const categoryDetails = await Category.findById(category);
+
+            if(!categoryDetails){
                 return res.status(404).json({
                     success:false,
-                    message:"tag not found"
+                    message:"Category not found"
                 })
             }
 
@@ -52,11 +60,13 @@ exports.createCourse = async (req ,res) =>{
                 instructor:instructorDetails._id,
                 whatYouWillLearn,
                 price,
-                tag:tagDetails._id,
-                thumbnail:thumbnailImage.secure_url
+                tag:tag,
+                thumbnail:thumbnailImage.secure_url,
+                status:status,
+                instructions:instructions
             })
 
-            //update to user-> instructor - add new course to user schema of instructor
+           		// Add the new course to the User Schema of the Instructor
             await User.findByIdAndUpdate(
                 {_id:instructorDetails._id},
                 //push or insert kar rhe hai course k array k andar newcourse ki id ko aur usko update kr rhe hai 
@@ -64,13 +74,16 @@ exports.createCourse = async (req ,res) =>{
                 {new:true}
             )
 
-            //update the tag schema
-            await Tag.findByIdAndUpdate(
-                {_id:tagDetails._id},
-                //push or insert kar rhe hai course k array k andar newcourse ki id ko aur usko update kr rhe hai 
-                {$push:{course:newCourse._id}},
-                {new:true}
-            )
+            		// Add the new course to the Categories
+                    await Category.findByIdAndUpdate(
+                        { _id: category },
+                        {
+                            $push: {
+                                course: newCourse._id,
+                            },
+                        },
+                        { new: true }
+                    );
 
             return res.status(200).json({
                 success:true,
@@ -87,7 +100,7 @@ exports.createCourse = async (req ,res) =>{
     }
 }
 //get all courses handler
-exports.showAllCourser = async (req,res)=>{
+exports.getAllCourses = async (req,res)=>{
     try{
         const allCourses = await Course.find({} , {
             courseName :true , price:true , thumbnail:true , instructor:true , ratingAndReviews:true , studentsEnrolled:true

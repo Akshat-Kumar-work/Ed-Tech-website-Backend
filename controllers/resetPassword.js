@@ -2,9 +2,9 @@
  const mailSender = require("../utils/mailSender");
  const bcrypt = require("bcrypt");
  //reset password - token
- try{
+ 
     exports.resetPasswordToken = async (req ,res)=>{
-     
+     try{
         //get email from request body
         const email = req.body.email;
         //check user for this email exist or not
@@ -39,7 +39,7 @@
         })
     
      }
- }
+ 
 catch(err){
 console.log("error while sending reset mail",err);
 return res.status(500).json({
@@ -47,6 +47,11 @@ return res.status(500).json({
     message:"unable to send mail to reset password"
 })
 }
+    }
+
+
+
+
  //reset password
  exports.resetPassword = async (req , res )=>{
 

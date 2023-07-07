@@ -43,7 +43,7 @@ exports.updateProfile = async (req ,res)=>{
 
 
 //delete profile
-exports.deleteProfile = async (req , res)=>{
+exports.deleteAccount = async (req , res)=>{
     try{
         //get id of user
         const id = req.user.id;
