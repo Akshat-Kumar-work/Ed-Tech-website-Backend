@@ -14,9 +14,11 @@ const ratingandreviewSchema = new mongoose.Schema({
         type:String,
         trim:true
     },
-    contactNumber: {
-		type: Number,
-		trim: true,
+    course: {
+		type: mongoose.Schema.Types.ObjectId,
+		required: true,
+		ref: "Course",
+		index: true,
 	},
 });
 
