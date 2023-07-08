@@ -43,7 +43,6 @@ const {passwordUpdated} = require("../mail/templates/passwordUpdate")
         otp = otpGenerator.generate(6,{
             upperCaseAlphabets:false,
         })
-        result = await OTP.findOne({otp:otp})
     }
 
     const otpPayload = {email , otp};
@@ -66,6 +65,7 @@ const {passwordUpdated} = require("../mail/templates/passwordUpdate")
         })
     }
  }
+
 
 
 
@@ -104,7 +104,7 @@ exports.signUp = async (req ,res)=>{
 
         //find most recent otp for the user
         const recentOtp = await OTP.find({email}).sort({createdAt:-1}).limit(1);
-        console.log(recentOtp);
+        console.log("recentotp",recentOtp.otp);
 
         //validate otp
         //if recent otp length is zero
@@ -116,7 +116,7 @@ exports.signUp = async (req ,res)=>{
             })
         }
         //if sended otp is not matched with recent data base otp
-        else if(otp !== recentOtp.otp){
+        else if(otp !== recentOtp[0].otp){
             //invalid otp
             return res.status(400).json({
                 success:false,
@@ -137,7 +137,7 @@ exports.signUp = async (req ,res)=>{
         //create new user
         const newUser = await user.create({
             firstName , lastName , email , contactNumber , password:hashedPassword , accountType , 
-            additionalDetails:profileDetails._id , image:`https://api.dicebear.com/5.x/initials/svg?seed=${firstName}${lastName}`
+            additionalDetails:profileDetails._id , img:`https://api.dicebear.com/5.x/initials/svg?seed=${firstName}${lastName}`
         }) 
 
     return res.status(200).json({
@@ -183,7 +183,7 @@ if(!User){
 
 //if user exist 
 //matching hash password
-const passwordVerfication = await bcrypt.compare( password , user.password);
+const passwordVerfication = await bcrypt.compare( password , User.password);
 
 //if password matched
 if(passwordVerfication){
@@ -202,7 +202,7 @@ if(passwordVerfication){
 
 //generate cookie for token
 res.cookie("token",token ,
- { expiresIn:new Date.now()+3*24*60*60*1000 , httpOnly:true}).status(200).json({
+ { expiresIn:new Date(Date.now()+3*24*60*60*1000) , httpOnly:true}).status(200).json({
     success:true,
     token,
     User,

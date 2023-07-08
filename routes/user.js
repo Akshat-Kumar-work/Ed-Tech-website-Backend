@@ -3,7 +3,7 @@ const express = require("express")
 const router = express.Router()
 
 //importing middlewares
-const { auth  } = require("../middleware/auth");
+const { auth  } = require("../middlewares/auth");
 
 //importing controllers
 
