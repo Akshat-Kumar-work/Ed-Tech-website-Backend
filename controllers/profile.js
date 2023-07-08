@@ -1,4 +1,5 @@
 const Profile = require("../models/profile");
+const {ImageUploaderToCloudinary} = require("../utils/imageUploader")
 const User = require("../models/user")
 
 //update profile
@@ -98,7 +99,7 @@ exports.updateDisplayPicture = async (req, res) => {
     try {
       const displayPicture = req.files.displayPicture
       const userId = req.user.id
-      const image = await uploadImageToCloudinary(
+      const image = await ImageUploaderToCloudinary(
         displayPicture,
         process.env.FOLDER_NAME,
         1000,
