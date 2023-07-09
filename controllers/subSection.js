@@ -2,11 +2,13 @@ const SubSection = require("../models/subSection");
 const Section = require("../models/section");
 const {ImageUploaderToCloudinary} =require("../utils/imageUploader")
 require("dotenv").config();
+
+
 //create subsection handler
 exports.createSubSection = async(req ,res)=>{
     try{
         //fetching data from req
-        const{ sectionId ,  title , timeDurationduration , description   } = req.body;
+        const{ sectionId ,  title , timeDuration , description   } = req.body;
         // fetching video file 
         const video = req.files.file
         //validation
@@ -21,7 +23,7 @@ exports.createSubSection = async(req ,res)=>{
         //create a subsection entry in db
         const SubSectionDetails = await SubSection.create({
             title:title,
-            timeDuration:timeDurationduration,
+            timeDuration:timeDuration,
             description:description,
             videoUrl:uploadDetails.secure_url
         })
@@ -47,14 +49,22 @@ exports.createSubSection = async(req ,res)=>{
 }
 
 //update subsection handler
-
 exports.updateSubSection = async (req ,res)=>{
 
     try{
         //fetch data
-    const {sectionId , subSectionId,  title , timeDuration , description } = req.body
+    const {sectionId ,  title , timeDuration , description } = req.body;
+    const subSection = await SubSection.findById(sectionId);
     //fetch files
     const video = req.files.file
+
+    //validation
+    if(!sectionId || !subSectionId){
+        return res.json({
+            status:false,
+            message:"section id or subsection is not present"
+        })
+    }
     //upload video
     const newupload = await ImageUploaderToCloudinary(video , process.env.FOLDER_NAME);
     //update to subsection
@@ -85,6 +95,8 @@ catch(err){
 }
 }
 
+
+//delete sub section handler
 exports.deletesubSection = async(req,res) =>{
     try{
 

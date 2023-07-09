@@ -8,7 +8,7 @@ require("dotenv").config();
 exports.createCourse = async (req ,res) =>{
     try{
         //fetch info
-        const {courseName , courseDescription , whatYouWillLearn , price , tag , category , status ,instructions} = req.body
+        let {courseName , courseDescription , whatYouWillLearn , price , tag , category , status ,instructions} = req.body
 
         //get thumbnail
         const thumbnail = req.files.thumbnailImage;
@@ -22,7 +22,7 @@ exports.createCourse = async (req ,res) =>{
 
            	// Check if the user is an instructor
             const userId = req.user.id;
-            const instructorDetails = await User.findById(userId);
+            const instructorDetails = await User.findById(userId , {accountType:"Instructor"});
             console.log("instructor details",instructorDetails)
 
             if(!instructorDetails){
@@ -57,19 +57,20 @@ exports.createCourse = async (req ,res) =>{
                 courseName,
                 courseDescription,
                 instructor:instructorDetails._id,
-                whatYouWillLearn,
+                whatYouWillLearn:whatYouWillLearn,
                 price,
                 tag:tag,
                 thumbnail:thumbnailImage.secure_url,
                 status:status,
-                instructions:instructions
+                instructions:instructions,
+                category: categoryDetails._id
             })
 
            		// Add the new course to the User Schema of the Instructor
             await User.findByIdAndUpdate(
                 {_id:instructorDetails._id},
                 //push or insert kar rhe hai course k array k andar newcourse ki id ko aur usko update kr rhe hai 
-                {$push:{course:newCourse._id}},
+                {$push:{courses:newCourse._id}},
                 {new:true}
             )
 
@@ -78,7 +79,7 @@ exports.createCourse = async (req ,res) =>{
                         { _id: category },
                         {
                             $push: {
-                                course: newCourse._id,
+                                courses: newCourse._id,
                             },
                         },
                         { new: true }
@@ -92,6 +93,7 @@ exports.createCourse = async (req ,res) =>{
         }
     
     catch(err){
+        console.log("error while creating course",err)
         return res.status(500).json({
             success:false,
             message:err.message
@@ -129,16 +131,17 @@ exports.getAllCourses = async (req,res)=>{
 exports.getCourseDetails = async(req ,res)=>{
 
 try{
-    const {courseId} = req.body.id;
+    const {courseId} = req.body;
+    console.log("course id ",courseId)
 
     if(!courseId){
         return res.status(400).json({
             success:false,
-            message:"course not found"
+            message:"course id not found"
         })
     }
 
-    const courseDetails = Course.findById({_id: courseId })
+    const courseDetails =await Course.findById({_id: courseId })
                                                 //populate karo instructor ko aur uske andar jo additional details usko bhi 
                                                 .populate({ path:"instructor",populate:{path:"additionalDetails"} })
                                                 //category bhi populate krdo

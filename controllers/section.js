@@ -63,6 +63,7 @@ exports.updateSection = async(req ,res)=>{
             })
         }
     catch(err){
+        console.log("error while updating subsection",err)
         return res.status(500).json({
             success:false,
             message:"unable to create section",
@@ -76,7 +77,8 @@ exports.deleteSection = async(req,res) =>{
     try{
 
         //we are assuming that we are sending id in parameters
-        const{ sectionId} = req.params;
+        const{sectionId} = req.params;
+        console.log("section id",sectionId)
 
        if (!sectionId){
         return res.status(400).json({

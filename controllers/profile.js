@@ -51,15 +51,15 @@ exports.deleteAccount = async (req , res)=>{
         const ID = req.user.id;
  
         //validation
-        const userDetails = await User.findById({_id:ID});
-        if(!userDetails){
+        const user = await User.findById({_id:ID});
+        if(!user){
             return res.status(404).json({
                 success:false,
                 message:"user not found"
             })
         }
         //delete profile 
-        await Profile.findByIdAndDelete({_id:userDetails.additionalDetails})
+        await Profile.findByIdAndDelete({_id:user.additionalDetails})
         //delete user
         await User.findByIdAndDelete({_id:ID})
         //delete student from enrolled count also

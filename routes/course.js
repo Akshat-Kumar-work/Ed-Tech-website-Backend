@@ -42,6 +42,13 @@ const { auth , isAdmin , isInstructor , isStudent} = require("../middlewares/aut
 //create new course
 router.post("/createCourse",auth ,isInstructor ,createCourse);
 
+//get all  course
+router.get("/getAllCourses",getAllCourses);
+
+//get details of specific course
+router.get("/getCourseDetails",getCourseDetails);
+
+
 //add section to course
 router.post("/addSection",auth , isInstructor , createSection);
 
@@ -50,6 +57,8 @@ router.put("/updateSection",auth , isInstructor, updateSection);
 
 //delete section
 router.delete("/deleteSection",auth ,isInstructor,deleteSection);
+
+
 
 //create subsection
 router.post("/addSubsection",auth , isInstructor , createSubSection);
@@ -60,11 +69,7 @@ router.put("/updateSubsection",auth , isInstructor , updateSubSection);
 //delete subsection
 router.delete("/deleteSubsection",auth , isInstructor , deletesubSection);
 
-//get all  course
-router.get("/getAllCourses",getAllCourses);
 
-//get details of specific course
-router.get("/getCourseDetails",getCourseDetails);
 //-----------------------------------------------------------------------------------------------------------------
 
 

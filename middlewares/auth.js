@@ -49,7 +49,7 @@ exports.isStudent = async (req,res, next) =>{
         if(req.user.accountType !== "Student"){
             return res.status(401).json({
                 success:false,
-                message:"role is not defined"
+                message:"you are not student"
             })
         }
         next();
@@ -58,7 +58,7 @@ exports.isStudent = async (req,res, next) =>{
         console.log("student authorization faild",err);
         return res.status().json({
             success:false,
-            message:"you are not student"
+            message:"server error"
         })
     }
 }
@@ -69,7 +69,7 @@ exports.isInstructor = async(req,res,next)=>{
         if(req.user.accountType !== "Instructor"){
             return res.status(401).json({
                 success:false,
-                message:"role is not defined"
+                message:"you are not an instructor"
             })
         }
         next();
@@ -78,7 +78,7 @@ exports.isInstructor = async(req,res,next)=>{
         console.log("Instructor authorization faild",err);
         return res.status().json({
             success:false,
-            message:"you are not Instructor"
+            message:"server error"
         })
     }
 }
@@ -90,7 +90,7 @@ exports.isAdmin = async(req,res,next)=>{
         if(req.user.accountType !== "Admin"){
             return res.status(401).json({
                 success:false,
-                message:"role is not defined"
+                message:"you are not an admin"
             })
         }
         next();
@@ -99,7 +99,7 @@ exports.isAdmin = async(req,res,next)=>{
         console.log("Admin authorization faild",err);
         return res.status().json({
             success:false,
-            message:"you are not Admin"
+            message:"internal error"
         })
     }
 }
