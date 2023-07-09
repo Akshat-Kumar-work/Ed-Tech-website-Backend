@@ -56,7 +56,7 @@ router.post("/addSection",auth , isInstructor , createSection);
 router.put("/updateSection",auth , isInstructor, updateSection);
 
 //delete section
-router.delete("/deleteSection",auth ,isInstructor,deleteSection);
+router.delete("/deleteSection/:sectionId",auth ,isInstructor,deleteSection);
 
 
 
@@ -67,7 +67,7 @@ router.post("/addSubsection",auth , isInstructor , createSubSection);
 router.put("/updateSubsection",auth , isInstructor , updateSubSection);
 
 //delete subsection
-router.delete("/deleteSubsection",auth , isInstructor , deletesubSection);
+router.delete("/deleteSubsection/:subsectionId",auth , isInstructor , deletesubSection);
 
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -103,7 +103,7 @@ router.post("/createRating", auth, isStudent, createRating)
 router.get("/getAverageRating", getAverageRating)
 
 //get reviews
-router.get("/getReviews", getAllRating)
+router.get("/getAllReviews", getAllRating)
 //-----------------------------------------------------------------------------------------------------------------
 
 

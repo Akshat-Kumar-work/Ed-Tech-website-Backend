@@ -77,7 +77,7 @@ exports.deleteSection = async(req,res) =>{
     try{
 
         //we are assuming that we are sending id in parameters
-        const{sectionId} = req.params;
+        const {sectionId} = req.params;
         console.log("section id",sectionId)
 
        if (!sectionId){
@@ -88,6 +88,9 @@ exports.deleteSection = async(req,res) =>{
        }
 
        const newSection = await Section.findByIdAndDelete( sectionId ,{new:true});
+
+       //to delete section from course also
+       //const updateCourse = await Course.findByIdAndDelete( )
 
        return res.status(200).json({
         success:true,
