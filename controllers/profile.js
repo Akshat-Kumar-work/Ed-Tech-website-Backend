@@ -5,11 +5,12 @@ const User = require("../models/user")
 //update profile
 exports.updateProfile = async (req ,res)=>{
     try{
-
+       
         //get data
         const {dateOfBirth="", about="",contactNumber ,gender} = req.body
         //get user id from req which is present in payload while decoding the token from cookies
         const id = req.user.id;
+     
         //validation
         if(!contactNumber || !gender || !id){
             return res.status(400).json({
@@ -26,7 +27,7 @@ exports.updateProfile = async (req ,res)=>{
             profileDetails.gender = gender;
             profileDetails.contactNumber = contactNumber;
         //update profile
-        await profileDetails.save()
+        (await profileDetails.save())
         //return response
         return res.status(200).json({
             success:true,
@@ -47,9 +48,10 @@ exports.updateProfile = async (req ,res)=>{
 exports.deleteAccount = async (req , res)=>{
     try{
         //get id of user
-        const id = req.user.id;
+        const ID = req.user.id;
+ 
         //validation
-        const userDetails = await User.findById(id);
+        const userDetails = await User.findById({_id:ID});
         if(!userDetails){
             return res.status(404).json({
                 success:false,
@@ -59,7 +61,7 @@ exports.deleteAccount = async (req , res)=>{
         //delete profile 
         await Profile.findByIdAndDelete({_id:userDetails.additionalDetails})
         //delete user
-        await User.findByIdAndDelete({_id:id})
+        await User.findByIdAndDelete({_id:ID})
         //delete student from enrolled count also
 
         //return response
@@ -69,6 +71,7 @@ exports.deleteAccount = async (req , res)=>{
         })
     }
     catch(err){
+      console.log(err)
         return res.status(500).json({
             success:false,
             message:"unable to delete profile"
@@ -80,10 +83,13 @@ exports.deleteAccount = async (req , res)=>{
 exports.getAllUserDetails = async(req,res)=>{
    try{
     const id = req.user.id
+    console.log("running")
+    
     const userDetails = await User.findById(id).populate("additionalDetails").exec();
     return res.status(200).json({
         success:true,
-        message:"user data fetched successfully"
+        message:"user data fetched successfully",
+        userDetails
     })
    }
    catch(err){
@@ -97,26 +103,29 @@ exports.getAllUserDetails = async(req,res)=>{
 //to update display picture
 exports.updateDisplayPicture = async (req, res) => {
     try {
-      const displayPicture = req.files.displayPicture
-      const userId = req.user.id
+      const displayPicture = req.files.picture
+   
+      const userId = req.user.id;
       const image = await ImageUploaderToCloudinary(
         displayPicture,
         process.env.FOLDER_NAME,
         1000,
         1000
       )
-      console.log(image)
+   
       const updatedProfile = await User.findByIdAndUpdate(
         { _id: userId },
-        { image: image.secure_url },
+        { img: image.secure_url },
         { new: true }
       )
+    
       res.send({
         success: true,
         message: `Image Updated successfully`,
         data: updatedProfile,
       })
     } catch (error) {
+      console.log(error)
       return res.status(500).json({
         success: false,
         message: error.message,

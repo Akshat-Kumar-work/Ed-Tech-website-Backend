@@ -76,7 +76,7 @@ return res.status(500).json({
         })
     }
     //agar userpassword ka time current k time sy peeche hai toh mtlb token expire hogya hai
-    if(userdetails.resetPasswordExpires < Date.now()){
+    if(!(userdetails.resetPasswordExpires < Date.now())){
         return res.json({
             success:false,
             message:"token is expired"
@@ -84,7 +84,7 @@ return res.status(500).json({
     }
 
     //hashing password
-    const hashedpassword =  bcrypt.hash(password , 10);
+    const hashedpassword = await bcrypt.hash(password , 10);
 
     //update password
     await User.findOneAndUpdate( {token} , {password:hashedpassword} , {new:true})
