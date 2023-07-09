@@ -56,7 +56,7 @@ router.post("/addSection",auth , isInstructor , createSection);
 router.put("/updateSection",auth , isInstructor, updateSection);
 
 //delete section
-router.delete("/deleteSection/:sectionId",auth ,isInstructor,deleteSection);
+router.delete("/deleteSection/:sectionId/:courseId",auth ,isInstructor,deleteSection);
 
 
 
