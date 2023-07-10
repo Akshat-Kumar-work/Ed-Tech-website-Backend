@@ -28,7 +28,7 @@ app.use( cors({origin:"http://localhost:3000" , credentials:true}));
 cloudinary.clodudinaryConnect();
 console.log("cloudinary connected")
 
-//routes 
+//routes mounting
 app.use("/api/v1/auth",userRoutes);
 app.use("/api/v1/profile",profileRoutes);
 app.use("/api/v1/payment",paymentRoutes);
