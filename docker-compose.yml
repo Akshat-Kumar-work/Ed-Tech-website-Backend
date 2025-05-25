@@ -6,6 +6,6 @@ services:
       context: .   # Path to directory with Dockerfile
       dockerfile: Dockerfile
     ports:
-      - "4000:4000"  # Host:Container
+      - "3000:3000"  # Host:Container
     env_file:
       - .env

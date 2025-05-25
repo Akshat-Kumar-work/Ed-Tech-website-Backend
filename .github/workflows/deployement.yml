@@ -55,7 +55,7 @@ jobs:
             aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest
             docker stop app || true && docker rm app || true
-            docker run -d --name app -p 4000:4000 \
+            docker run -d --name app -p 3000:3000 \
                 -e PORT=${{ secrets.PORT }} \
                 -e MONGODB_URL=${{ secrets.MONGODB_URL }} \
                 -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
