@@ -55,5 +55,18 @@ jobs:
             aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest
             docker stop app || true && docker rm app || true
-            docker run -d --name app -p 4000:4000 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest
+            docker run -d --name app -p 4000:4000 \
+                -e PORT=${{ secrets.PORT }} \
+                -e MONGODB_URL=${{ secrets.MONGODB_URL }} \
+                -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
+                -e FOLDER_NAME=${{ secrets.FOLDER_NAME }} \
+                -e CLOUD_NAME=${{ secrets.CLOUD_NAME }} \
+                -e API_KEY=${{ secrets.API_KEY }} \
+                -e API_SECRET=${{ secrets.API_SECRET }} \
+                -e MAIL_HOST=${{ secrets.MAIL_HOST }} \
+                -e MAIL_USER=${{ secrets.MAIL_USER }} \
+                -e MAIL_PASS=${{ secrets.MAIL_PASS }} \
+                -e RAZORPAY_KEY=${{ secrets.RAZORPAY_KEY }} \
+                -e RAZORPAY_SECRET=${{ secrets.RAZORPAY_SECRET }} \
+                ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest
           EOF
